@@ -9,6 +9,10 @@
     "bower_components",
     "output"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/paf31/purescript-foreign-lens.git"    
+  },
   "dependencies": {
     "purescript-const": "~0.5.0",
     "purescript-contravariant": "~0.2.1",

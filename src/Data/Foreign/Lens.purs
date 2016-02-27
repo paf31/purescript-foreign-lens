@@ -1,12 +1,7 @@
 -- | A `lens`-compatible layer for `purescript-foreign`.
 
 module Data.Foreign.Lens 
-  ( PartialGetter()
-  , getter
-  , get
-  , getMap
-  
-  , json
+  ( json
   , string
   , char
   , boolean
@@ -20,79 +15,54 @@ module Data.Foreign.Lens
     
 import Prelude
     
+import Data.Lens
 import Data.Maybe
 import Data.Maybe.First
 import Data.Const
 import Data.Either
 import Data.Monoid
-import Data.Functor.Contravariant
+import Data.Traversable (Traversable)
 
 import qualified Data.Foreign as F
 import qualified Data.Foreign.Index as F
 import qualified Data.Foreign.Keys as F
    
-data Void = Void
-
-coerce :: forall f a b. (Contravariant f, Functor f) => f a -> f b
-coerce = map absurd <<< cmap absurd
-  where
-  absurd :: forall a. Void -> a
-  absurd a = absurd a
-    
--- | An optic for getting zero or more values with possible failure.
-type PartialGetter a s = forall f. (Contravariant f, Applicative f) => (a -> f a) -> s -> f s
-    
--- | Run a `PartialGetter`, getting the first value.
-get :: forall a s. PartialGetter a s -> s -> Maybe a
-get g = runFirst <<< getMap (First <<< Just) g
-
--- | Run a `PartialGetter`, getting all values.
-getMap :: forall a s m. (Monoid m) => (a -> m) -> PartialGetter a s -> s -> m
-getMap f g = getConst <<< g (Const <<< f)
-    
--- | Create a `PartialGetter` from a function which uses `Either` to indicate failure.
-getter :: forall e a s. (s -> Either e a) -> PartialGetter a s
-getter f g s = 
-  case f s of
-    Left _ -> coerce (pure unit)
-    Right a -> coerce (g a)
+-- | A `forall r. FoldP r` which parses JSON.
+json :: forall r. (Monoid r) => FoldP r String F.Foreign
+json = to F.parseJSON <<< traversed
    
--- | A `PartialGetter` which parses JSON.
-json :: PartialGetter F.Foreign String
-json = getter F.parseJSON
+-- | A `forall r. FoldP r` which reads a `String`.
+string :: forall r. (Monoid r) => FoldP r F.Foreign String
+string = to F.readString <<< traversed
    
--- | A `PartialGetter` which reads a `String`.
-string :: PartialGetter String F.Foreign
-string = getter F.readString
+-- | A `forall r. FoldP r` which reads a `Char`.
+char :: forall r. (Monoid r) => FoldP r F.Foreign Char
+char = to F.readChar <<< traversed
    
--- | A `PartialGetter` which reads a `Char`.
-char :: PartialGetter Char F.Foreign
-char = getter F.readChar
+-- | A `forall r. FoldP r` which reads a `Boolean`.
+boolean :: forall r. (Monoid r) => FoldP r F.Foreign Boolean
+boolean = to F.readBoolean <<< traversed
    
--- | A `PartialGetter` which reads a `Boolean`.
-boolean :: PartialGetter Boolean F.Foreign
-boolean = getter F.readBoolean
+-- | A `forall r. FoldP r` which reads a `Number`.
+number :: forall r. (Monoid r) => FoldP r F.Foreign Number
+number = to F.readNumber <<< traversed
    
--- | A `PartialGetter` which reads a `Number`.
-number :: PartialGetter Number F.Foreign
-number = getter F.readNumber
+-- | A `forall r. FoldP r` which reads an `Int`.
+int :: forall r. (Monoid r) => FoldP r F.Foreign Int
+int = to F.readInt <<< traversed
    
--- | A `PartialGetter` which reads an `Int`.
-int :: PartialGetter Int F.Foreign
-int = getter F.readInt
+-- | A `forall r. FoldP r` which reads an `Array`.
+array :: forall r. (Monoid r) => FoldP r F.Foreign (Array F.Foreign)
+array = to F.readArray <<< traversed
    
--- | A `PartialGetter` which reads an `Array`.
-array :: PartialGetter (Array F.Foreign) F.Foreign
-array = getter F.readArray
+-- | A `forall r. FoldP r` which reads an object property.
+prop :: forall r. (Monoid r) => String -> FoldP r F.Foreign F.Foreign
+prop p = to (F.prop p) <<< traversed
    
--- | A `PartialGetter` which reads an object property.
-prop :: String -> PartialGetter F.Foreign F.Foreign
-prop p = getter (F.prop p)
+-- | A `forall r. FoldP r` which reads an array index.
+index :: forall r. (Monoid r) => Int -> FoldP r F.Foreign F.Foreign
+index i = to (F.index i) <<< traversed
    
--- | A `PartialGetter` which reads an array index.
-index :: Int -> PartialGetter F.Foreign F.Foreign
-index i = getter (F.index i)
-   
--- | A `PartialGetter` which reads object keys.
-keys :: PartialGetter (Array String) F.Foreign
-keys = getter F.keys
+-- | A `forall r. FoldP r` which reads object keys.
+keys :: forall r. (Monoid r) => FoldP r F.Foreign (Array String)
+keys = to F.keys <<< traversed

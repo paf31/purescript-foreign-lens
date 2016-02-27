@@ -11,11 +11,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/paf31/purescript-foreign-lens.git"    
+    "url": "git://github.com/paf31/purescript-foreign-lens.git"
   },
   "dependencies": {
     "purescript-const": "~0.5.0",
     "purescript-contravariant": "~0.2.1",
-    "purescript-foreign": "~0.7.0"
+    "purescript-foreign": "~0.7.0",
+    "purescript-profunctor-lenses": "~0.4.2"
   }
 }

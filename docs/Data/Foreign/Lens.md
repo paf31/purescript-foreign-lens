@@ -8,7 +8,7 @@ A `lens`-compatible layer for `purescript-foreign`.
 json :: forall r. (Monoid r) => FoldP r String Foreign
 ```
 
-A `forall r. FoldP r` which parses JSON.
+A `Fold` which parses JSON.
 
 #### `string`
 
@@ -16,7 +16,7 @@ A `forall r. FoldP r` which parses JSON.
 string :: forall r. (Monoid r) => FoldP r Foreign String
 ```
 
-A `forall r. FoldP r` which reads a `String`.
+A `Fold` which reads a `String`.
 
 #### `char`
 
@@ -24,7 +24,7 @@ A `forall r. FoldP r` which reads a `String`.
 char :: forall r. (Monoid r) => FoldP r Foreign Char
 ```
 
-A `forall r. FoldP r` which reads a `Char`.
+A `Fold` which reads a `Char`.
 
 #### `boolean`
 
@@ -32,7 +32,7 @@ A `forall r. FoldP r` which reads a `Char`.
 boolean :: forall r. (Monoid r) => FoldP r Foreign Boolean
 ```
 
-A `forall r. FoldP r` which reads a `Boolean`.
+A `Fold` which reads a `Boolean`.
 
 #### `number`
 
@@ -40,7 +40,7 @@ A `forall r. FoldP r` which reads a `Boolean`.
 number :: forall r. (Monoid r) => FoldP r Foreign Number
 ```
 
-A `forall r. FoldP r` which reads a `Number`.
+A `Fold` which reads a `Number`.
 
 #### `int`
 
@@ -48,7 +48,7 @@ A `forall r. FoldP r` which reads a `Number`.
 int :: forall r. (Monoid r) => FoldP r Foreign Int
 ```
 
-A `forall r. FoldP r` which reads an `Int`.
+A `Fold` which reads an `Int`.
 
 #### `array`
 
@@ -56,7 +56,7 @@ A `forall r. FoldP r` which reads an `Int`.
 array :: forall r. (Monoid r) => FoldP r Foreign (Array Foreign)
 ```
 
-A `forall r. FoldP r` which reads an `Array`.
+A `Fold` which reads an `Array`.
 
 #### `prop`
 
@@ -64,7 +64,7 @@ A `forall r. FoldP r` which reads an `Array`.
 prop :: forall r. (Monoid r) => String -> FoldP r Foreign Foreign
 ```
 
-A `forall r. FoldP r` which reads an object property.
+A `Fold` which reads an object property.
 
 #### `index`
 
@@ -72,7 +72,7 @@ A `forall r. FoldP r` which reads an object property.
 index :: forall r. (Monoid r) => Int -> FoldP r Foreign Foreign
 ```
 
-A `forall r. FoldP r` which reads an array index.
+A `Fold` which reads an array index.
 
 #### `keys`
 
@@ -80,6 +80,6 @@ A `forall r. FoldP r` which reads an array index.
 keys :: forall r. (Monoid r) => FoldP r Foreign (Array String)
 ```
 
-A `forall r. FoldP r` which reads object keys.
+A `Fold` which reads object keys.
 
 

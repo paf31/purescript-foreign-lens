@@ -1,6 +1,6 @@
 -- | A `lens`-compatible layer for `purescript-foreign`.
 
-module Data.Foreign.Lens 
+module Data.Foreign.Lens
   ( json
   , string
   , char
@@ -12,57 +12,50 @@ module Data.Foreign.Lens
   , index
   , keys
   ) where
-    
-import Prelude
-    
-import Data.Lens
-import Data.Maybe
-import Data.Maybe.First
-import Data.Const
-import Data.Either
-import Data.Monoid
-import Data.Traversable (Traversable)
 
-import qualified Data.Foreign as F
-import qualified Data.Foreign.Index as F
-import qualified Data.Foreign.Keys as F
-   
+import Prelude
+import Data.Foreign (Foreign, readArray, readInt, readNumber, readBoolean, readChar, readString, parseJSON)
+import Data.Foreign.Index (index, prop) as F
+import Data.Foreign.Keys (keys) as F
+import Data.Lens (FoldP, traversed, to)
+import Data.Monoid (class Monoid)
+
 -- | A `Fold` which parses JSON.
-json :: forall r. (Monoid r) => FoldP r String F.Foreign
-json = to F.parseJSON <<< traversed
-   
+json :: forall r. Monoid r => FoldP r String Foreign
+json = to parseJSON <<< traversed
+
 -- | A `Fold` which reads a `String`.
-string :: forall r. (Monoid r) => FoldP r F.Foreign String
-string = to F.readString <<< traversed
-   
+string :: forall r. Monoid r => FoldP r Foreign String
+string = to readString <<< traversed
+
 -- | A `Fold` which reads a `Char`.
-char :: forall r. (Monoid r) => FoldP r F.Foreign Char
-char = to F.readChar <<< traversed
-   
+char :: forall r. Monoid r => FoldP r Foreign Char
+char = to readChar <<< traversed
+
 -- | A `Fold` which reads a `Boolean`.
-boolean :: forall r. (Monoid r) => FoldP r F.Foreign Boolean
-boolean = to F.readBoolean <<< traversed
-   
+boolean :: forall r. Monoid r => FoldP r Foreign Boolean
+boolean = to readBoolean <<< traversed
+
 -- | A `Fold` which reads a `Number`.
-number :: forall r. (Monoid r) => FoldP r F.Foreign Number
-number = to F.readNumber <<< traversed
-   
+number :: forall r. Monoid r => FoldP r Foreign Number
+number = to readNumber <<< traversed
+
 -- | A `Fold` which reads an `Int`.
-int :: forall r. (Monoid r) => FoldP r F.Foreign Int
-int = to F.readInt <<< traversed
-   
+int :: forall r. Monoid r => FoldP r Foreign Int
+int = to readInt <<< traversed
+
 -- | A `Fold` which reads an `Array`.
-array :: forall r. (Monoid r) => FoldP r F.Foreign (Array F.Foreign)
-array = to F.readArray <<< traversed
-   
+array :: forall r. Monoid r => FoldP r Foreign (Array Foreign)
+array = to readArray <<< traversed
+
 -- | A `Fold` which reads an object property.
-prop :: forall r. (Monoid r) => String -> FoldP r F.Foreign F.Foreign
+prop :: forall r. Monoid r => String -> FoldP r Foreign Foreign
 prop p = to (F.prop p) <<< traversed
-   
+
 -- | A `Fold` which reads an array index.
-index :: forall r. (Monoid r) => Int -> FoldP r F.Foreign F.Foreign
+index :: forall r. Monoid r => Int -> FoldP r Foreign Foreign
 index i = to (F.index i) <<< traversed
-   
+
 -- | A `Fold` which reads object keys.
-keys :: forall r. (Monoid r) => FoldP r F.Foreign (Array String)
+keys :: forall r. Monoid r => FoldP r Foreign (Array String)
 keys = to F.keys <<< traversed

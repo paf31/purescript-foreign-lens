@@ -2,24 +2,24 @@ module Test.Main where
 
 import Prelude
 
-import Data.Monoid (Monoid)
+import Control.Monad.Eff (Eff)
+import Control.Monad.Eff.Console (CONSOLE, log)
+import Data.Foldable (traverse_)
+import Data.Foreign (Foreign, toForeign)
+import Data.Foreign.Lens (string, prop, array)
 import Data.Lens (FoldP(), (^..), traversed)
-import Data.Foreign
-import Data.Foreign.Lens
-import Data.Traversable (traverse)
+import Data.Monoid (class Monoid)
 
-import qualified Data.Array as A
+doc :: Foreign
+doc = toForeign { paras: [ { word: "Hello" }, { word: "World" } ] }
 
-import Control.Monad.Eff.Console
+-- | This `FoldP` extracts all words appearing in a structure like the one above.
+words :: forall r. Monoid r => FoldP r Foreign String
+words = prop "paras"
+    <<< array
+    <<< traversed
+    <<< prop "word"
+    <<< string
 
-main = do
-  let doc = toForeign { words: [ { word: "Hello" }, { word: "World" } ] }
-    
-  let bars :: forall r. (Monoid r) => FoldP r Foreign String
-      bars = prop "words" 
-         <<< array 
-         <<< traversed 
-         <<< prop "word" 
-         <<< string
-    
-  traverse print $ doc ^.. bars
+main :: forall e. Eff (console :: CONSOLE | e) Unit
+main = traverse_ log (doc ^.. words)

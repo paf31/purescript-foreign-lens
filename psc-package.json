@@ -1,0 +1,9 @@
+{
+    "name": "foreign-lens",
+    "source": "https://github.com/purescript/package-sets.git",
+    "set": "psc-0.10.1",
+    "depends": [
+      "foreign",
+      "profunctor-lenses"
+    ]
+}

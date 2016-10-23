@@ -1,4 +1,5 @@
-.pulp-cache
 .psci*
-output
-bower_components
+bower_components/
+output/
+.psc-package
+.psc-ide-port

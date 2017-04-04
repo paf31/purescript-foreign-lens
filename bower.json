@@ -15,10 +15,10 @@
     "url": "git://github.com/paf31/purescript-foreign-lens.git"
   },
   "dependencies": {
-    "purescript-foreign": "^3.0.0",
-    "purescript-profunctor-lenses": "^2.0.0"
+    "purescript-foreign": "^4.0.0",
+    "purescript-profunctor-lenses": "^3.0.0"
   },
   "devDependencies": {
-    "purescript-console": "^2.0.0"
+    "purescript-console": "^3.0.0"
   }
 }

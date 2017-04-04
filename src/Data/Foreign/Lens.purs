@@ -1,8 +1,7 @@
 -- | A `lens`-compatible layer for `purescript-foreign`.
 
 module Data.Foreign.Lens
-  ( json
-  , string
+  ( string
   , char
   , boolean
   , number
@@ -15,15 +14,11 @@ module Data.Foreign.Lens
 
 import Prelude
 import Control.Monad.Except (runExcept)
-import Data.Foreign (Foreign, readArray, readInt, readNumber, readBoolean, readChar, readString, parseJSON)
-import Data.Foreign.Index (index, prop) as F
+import Data.Foreign (Foreign, readArray, readInt, readNumber, readBoolean, readChar, readString)
+import Data.Foreign.Index (index, readProp) as F
 import Data.Foreign.Keys (keys) as F
 import Data.Lens (Fold', traversed, to)
 import Data.Monoid (class Monoid)
-
--- | A `Fold` which parses JSON.
-json :: forall r. Monoid r => Fold' r String Foreign
-json = to (runExcept <<< parseJSON) <<< traversed
 
 -- | A `Fold` which reads a `String`.
 string :: forall r. Monoid r => Fold' r Foreign String
@@ -51,11 +46,11 @@ array = to (runExcept <<< readArray) <<< traversed
 
 -- | A `Fold` which reads an object property.
 prop :: forall r. Monoid r => String -> Fold' r Foreign Foreign
-prop p = to (runExcept <<< F.prop p) <<< traversed
+prop p = to (runExcept <<< F.readProp p) <<< traversed
 
 -- | A `Fold` which reads an array index.
 index :: forall r. Monoid r => Int -> Fold' r Foreign Foreign
-index i = to (runExcept <<< F.index i) <<< traversed
+index i = to (runExcept <<< (_ `F.index` i)) <<< traversed
 
 -- | A `Fold` which reads object keys.
 keys :: forall r. Monoid r => Fold' r Foreign (Array String)

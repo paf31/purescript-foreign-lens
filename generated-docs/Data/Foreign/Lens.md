@@ -2,14 +2,6 @@
 
 A `lens`-compatible layer for `purescript-foreign`.
 
-#### `json`
-
-``` purescript
-json :: forall r. Monoid r => Fold' r String Foreign
-```
-
-A `Fold` which parses JSON.
-
 #### `string`
 
 ``` purescript
